@@ -1,0 +1,25 @@
+version: '3'
+services:
+  agent-test:
+    build: .
+    image: geth-agent:test
+    container_name: agent-test
+    mem_limit: 300m
+    cpu_percent: 10
+    environment:
+      AGENT_INFLUXDB_HOST: http://172.20.0.10:8086
+      AGENT_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+      AGENT_INFLUXDB_DATABASE: influxdb_test
+      AGENT_ETHEREUM_RPC_URL: http://172.19.0.10:8545
+      AGENT_ETHEREUM_METRICS_URL: http://172.19.0.10:6060/debug/metrics
+      AGENT_CLIENT_APP_NAME: 3N
+      AGENT_ENV: production
+    networks: 
+      - proxy_net
+      - api_influx_net
+
+networks:
+  proxy_net:
+    external: true
+  api_influx_net:
+    external: true

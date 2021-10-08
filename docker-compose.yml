@@ -1,0 +1,152 @@
+version: '3'
+
+services:
+
+  node1:
+      build: 
+        context: ./cmnet/
+        dockerfile: ./FNode/Dockerfile1
+      image: cm3n:node1
+      container_name: node1
+      ports:
+          - "8545:8545"
+          - "30303:30303"
+          - "6060:6060"
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.10
+
+  node2:
+      depends_on: 
+          - node1
+      build: 
+        context: ./cmnet/
+        dockerfile: ./LNode/Dockerfile2
+      image: cm3n:node2
+      container_name: node2
+      ports:
+          - "8546:8545"
+          - "30304:30304"
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.11
+
+  node3:
+      depends_on:
+          - node2
+      build: 
+        context: ./cmnet/
+        dockerfile: ./MNode/Dockerfile3
+      image: cm3n:node3
+      container_name: node3
+      ports:
+          - "8547:8545"
+          - "30305:30305"
+      env_file: ./cmnet/3n.env
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.12
+
+  influxdb:
+    image: influxdb:1.8.4
+    container_name: influxdb
+    deploy:
+      restart_policy: 
+        delay: 10s
+    ports:
+      - 8086:8086
+    environment:
+      - INFLUXDB_DB=influxdb_node1
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=pwd4admin
+      - INFLUXDB_USER=user
+      - INFLUXDB_USER_PASSWORD=pwd4user
+      - INFLUXDB_HTTP_ENABLED=true
+      - INFLUXDB_HTTP_FLUX_ENABLED=true
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+    ulimits: 
+      nofile:
+        soft: 500000
+        hard: 500000
+    networks:
+      cmapi-influx-net:
+        ipv4_address: 172.18.0.10 
+
+  cmagent:
+      depends_on:
+        - node3
+        - influxdb
+      build: 
+        context: ./cmagent/
+      image: cmagent:latest
+      container_name: cmagent
+      deploy:
+        restart_policy:
+          delay: 1m
+      mem_limit: 300m
+      cpu_percent: 10
+      environment:
+          AGENT_INFLUXDB_HOST: http://172.18.0.10:8086
+          AGENT_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+          AGENT_INFLUXDB_DATABASE: influxdb_node1
+          AGENT_ETHEREUM_RPC_URL: http://172.19.0.10:8545
+          AGENT_ETHEREUM_METRICS_URL: http://172.19.0.10:6060/debug/metrics
+          AGENT_ENV: production
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.13
+        cmapi-influx-net:
+          ipv4_address: 172.18.0.11
+
+  cmapi:
+    depends_on: 
+      - influxdb
+    build: 
+      context: ./cmapi/
+    image: cmapi:latest
+    container_name: cmapi
+    ports:
+      - 9001:9001
+    mem_limit: 1g
+    cpu_percent: 15
+    environment:
+      GIN_MODE: release
+      METRICS_INFLUXDB_HOST: http://172.18.0.10:8086
+      METRICS_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+    ulimits: 
+      nofile:
+        soft: 500000
+        hard: 500000
+    networks:
+      cmapi-influx-net:
+        ipv4_address: 172.18.0.12
+
+  conmon:
+    depends_on:
+      - cmapi
+    build:
+      context: ./conmonitor/
+    image: conmon:latest
+    container_name: conmon
+    ports: 
+      - 9000:9000
+    mem_limit: 250m
+    cpu_percent: 10
+    networks:
+      cmapi-influx-net:
+        ipv4_address: 172.18.0.13
+
+networks:
+  privtnet:
+    name: proxy_net
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.19.0.0/20
+
+  cmapi-influx-net:
+    name: proxy_net_b
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.18.0.0/20

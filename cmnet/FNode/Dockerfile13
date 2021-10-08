@@ -1,0 +1,11 @@
+FROM ethereum/client-go:alltools-stable
+WORKDIR /root/geth
+COPY ./genesis.json ./FNode/node13/nodekey ./FNode/node13/start_node.sh ./scripts/accountShare.sh ./scripts/attach.sh ./scripts/rmEthash.sh ./
+RUN chmod 777 ./nodekey ./genesis.json ./start_node.sh ./accountShare.sh ./attach.sh ./rmEthash.sh
+RUN touch node.log
+RUN geth --nousb --datadir "/root/geth/node" init "/root/geth/genesis.json"
+COPY ./FNode/node13/static-nodes.json /root/geth/node/geth/static-nodes.json
+RUN chmod 777 /root/geth/node/geth/static-nodes.json
+COPY ./FNode/node13/ethActs/* /root/geth/ethActs/
+RUN ./accountShare.sh
+ENTRYPOINT ["/bin/sh", "/root/geth/start_node.sh"]

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  conmon:
+    build: .
+    image: conmon:latest
+    container_name: conmon
+    ports: 
+      - 9000:9000
+    mem_limit: 250m
+    cpu_percent: 10
+    networks: 
+      proxy_net_b:
+        ipv4_address: 172.18.0.13
+
+networks:
+  proxy_net_b:
+    external: true

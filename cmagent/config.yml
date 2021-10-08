@@ -1,0 +1,11 @@
+influxdb:
+  host: 'http://172.18.0.10:8086'
+  auth_token: 'admin:pwd4admin'
+  database: 'influxdb_node1'
+
+ethereum:
+  rpc_url: 'http://172.19.0.10:8545'
+  metrics_url: 'http://172.19.0.10:6060/debug/metrics'
+
+client:
+  app_name: "3N"

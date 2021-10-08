@@ -1,0 +1,26 @@
+version: '3'
+services:
+  cmapi:
+    build: 
+      context: .
+    image: cmapi:latest
+    container_name: cmapi
+    ports:
+      - 9001:9001
+    mem_limit: 1g
+    cpu_percent: 15
+    environment:
+      GIN_MODE: release
+      METRICS_INFLUXDB_HOST: http://172.18.0.10:8086
+      METRICS_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+    ulimits: 
+      nofile:
+        soft: 500000
+        hard: 500000
+    networks:
+      proxy_net_b:
+        ipv4_address: 172.18.0.12
+
+networks:
+  proxy_net_b:
+    external: true

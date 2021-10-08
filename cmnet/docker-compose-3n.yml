@@ -1,0 +1,78 @@
+version: '3'
+
+services:
+
+  node1:
+      build:
+          context: ./
+          dockerfile: ./FNode/Dockerfile1
+      image: 3n:node1
+      container_name: node1
+      ports:
+          - "8545:8545"
+          - "30303:30303"
+          - "6060:6060"
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.10
+
+  node2:
+      depends_on: 
+          - node1    
+      build:
+          context: ./
+          dockerfile: ./LNode/Dockerfile2
+      image: 3n:node2
+      container_name: node2
+      ports:
+          - "8546:8545"
+          - "30304:30304"
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.11
+
+  node3:
+      depends_on:
+          - node2
+      build:
+          context: ./
+          dockerfile: ./MNode/Dockerfile3
+      image: 3n:node3
+      container_name: node3
+      ports:
+          - "8547:8545"
+          - "30305:30305"
+      env_file: 3n.env
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.12
+
+  agent:
+      depends_on:
+          - node1
+          - node3
+      deploy:
+        restart_policy:
+          delay: 1m
+      image: geth-agent:latest
+      container_name: agent
+      mem_limit: 300m
+      cpu_percent: 10
+      environment:
+          AGENT_INFLUXDB_HOST: http://54.187.97.87:8086
+          AGENT_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+          AGENT_INFLUXDB_DATABASE: influxdb_test
+          AGENT_ETHEREUM_RPC_URL: http://172.19.0.10:8545
+          AGENT_ETHEREUM_METRICS_URL: http://172.19.0.10:6060/debug/metrics
+          AGENT_ENV: production
+      networks:
+        privtnet:
+          ipv4_address: 172.19.0.13
+
+networks:
+  privtnet:
+    name: proxy_net
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.19.0.0/20

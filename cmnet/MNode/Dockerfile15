@@ -1,0 +1,16 @@
+FROM ubuntu:18.04
+RUN apt-get update && apt-get install -y software-properties-common
+RUN add-apt-repository -y ppa:ethereum/ethereum && apt-get update
+RUN apt-get -y install ethereum && apt-get update
+WORKDIR /root/geth
+COPY ./genesis.json ./scripts/envLoad.sh ./MNode/node15/nodekey ./MNode/node15/start_node.sh ./MNode/act1.txt ./scripts/accountShare.sh ./scripts/attach.sh ./scripts/rmEthash.sh ./scripts/startMining.sh ./scripts/stopMining.sh ./scripts/startSim.sh ./MNode/sim-crontab ./
+COPY ./scripts/simulateTransactions.js /root/geth/scripts/simulateTransactions.js
+RUN chmod 777 ./nodekey ./genesis.json ./envLoad.sh ./start_node.sh ./act1.txt ./accountShare.sh ./attach.sh ./rmEthash.sh ./startMining.sh ./stopMining.sh ./startSim.sh ./sim-crontab ./scripts/simulateTransactions.js
+RUN touch node.log
+RUN geth --nousb --datadir "/root/geth/node" init "/root/geth/genesis.json"
+COPY ./MNode/node15/static-nodes.json /root/geth/node/geth/static-nodes.json
+RUN chmod 777 /root/geth/node/geth/static-nodes.json
+COPY ./MNode/node15/ethActs/* /root/geth/ethActs/
+RUN ./accountShare.sh
+RUN crontab sim-crontab
+ENTRYPOINT ["bash", "/root/geth/start_node.sh"]

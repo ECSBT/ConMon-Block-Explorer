@@ -1,0 +1,85 @@
+html,
+body {
+  line-height: 12px;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+h1 {
+  font-size: 36px;
+  color: white;
+}
+
+h2 {
+  font-size: 28px;
+  display: inline-flex;
+  color: #52057B;
+}
+
+h3 {
+  font-size: 20px;
+  color: #bbb;
+}
+
+nav {
+  background-color: #666;
+  text-align: center;
+
+}
+
+ul {
+  list-style-type: none;
+  margin: 0 0 2rem 0;
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  background-color: #666;
+  top: 0;
+  width: 100%;
+  text-align: center;
+}
+
+li {
+  float: left;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid #bbb;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #181818cc;
+}
+
+li a:focus-within {
+  color: #52057B;
+  background-color: #BC6FF1;
+}
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}

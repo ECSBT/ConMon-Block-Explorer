@@ -1,0 +1,27 @@
+version: '3'
+services:
+  cmagent:
+    build: .
+    image: cmagent:latest
+    container_name: cmagent
+    deploy:
+      restart_policy: 
+        delay: 1m
+    mem_limit: 300m
+    cpu_percent: 10
+    environment:
+      AGENT_INFLUXDB_HOST: http://172.20.0.10:8086
+      AGENT_INFLUXDB_AUTH_TOKEN: admin:pwd4admin
+      AGENT_INFLUXDB_DATABASE: influxdb_node1
+      AGENT_ETHEREUM_RPC_URL: http://172.19.0.10:8545
+      AGENT_ETHEREUM_METRICS_URL: http://172.19.0.10:6060/debug/metrics
+      AGENT_ENV: production
+    networks: 
+      - proxy_net
+      - proxy_net_b
+
+networks:
+  proxy_net:
+    external: true
+  proxy_net_b:
+    external: true

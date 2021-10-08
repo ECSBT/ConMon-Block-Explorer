@@ -1,0 +1,142 @@
+.container {
+  display         : inline-block;
+  flex-direction  : row;
+  height          : 100%;
+  width           : 50vw;
+  background-color: #181818cc;
+  justify-content : center;
+  align-items     : center;
+  z-index: -1;
+}
+
+.chead {
+  width          : 100%;
+  display        : inline-flex;
+  text-align     : center;
+  justify-content: center;
+  align-items    : center;
+  vertical-align : center;
+}
+
+.hl,
+.ht,
+.hr {
+  width: 33.33%;
+  height: 12vh;
+}
+
+.hr,
+.hl {
+  display        : flex;
+  flex-direction: row;
+  text-align    : left;
+  justify-content: center;
+  align-items    : center;
+}
+
+.hr {
+  text-decoration: underline;
+}
+
+.tf {
+  background-color: #ffffff;
+  border-radius: 15px 3px 3px 15px;
+  width: 8vw;
+  z-index: 0;
+}
+
+.sb {
+	box-shadow:inset 0px 1px 0px 0px #efdcfb;
+	background:linear-gradient(to bottom, #dfbdfa 5%, #bc80ea 100%);
+	background-color:#dfbdfa;
+  border-radius: 3px 15px 15px 3px;
+	border:1px solid #c584f3;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	font-size:16px;
+	font-weight:bold;
+	padding:16px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #9752cc;
+}
+.sb:hover {
+	background:linear-gradient(to bottom, #bc80ea 5%, #dfbdfa 100%);
+	background-color:#bc80ea;
+}
+.sb:active {
+	position:relative;
+	top:1px;
+}
+
+.lb {
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	background-color:#ededed;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#52057B;
+	font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+.lb:hover {
+	background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+	background-color:#bab1ba;
+}
+.lb:active {
+	position:relative;
+	top:1px;
+}
+
+.sb span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+
+
+.cbody {
+  padding   : 0 5% 0 5%;
+  color     : #BC6FF1;
+  text-align: left;
+}
+
+.circleon {
+  width        : .75rem;
+  height       : .75rem;
+  border-radius: 50%;
+  background   : #46ff65d5;
+  float        : inline-start;
+  margin-right: 1rem;
+  animation    : pulse-animation 2.5s infinite;
+}
+
+.circleoff {
+  width          : .75rem;
+  height         : .75rem;
+  border-radius  : 50%;
+  background     : #acacacd5;
+  align-items    : right;
+  justify-content: right;
+  text-align     : right;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.116);
+  }
+
+  100% {
+    box-shadow: 0 0 0 .125rem #BC6FF1;
+  }
+}
