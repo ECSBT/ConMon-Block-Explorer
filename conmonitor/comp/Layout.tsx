@@ -9,6 +9,7 @@ const Layout = ({ children }: { children: any }) => {
         <Particles />
       </div>
       <main className={styles.main}>{children}</main>
+      <div> <br /> <br /> <br /> </div>
     </div>
   )
 }

@@ -13,6 +13,7 @@ const BlockDataCard = (props: any) => {
   let liveIndicator: any
   let searchVal: any
   let prevBlock:  number
+  let tsReadable: any
 
   ICardData =  {
     last_block: '', 
@@ -20,6 +21,7 @@ const BlockDataCard = (props: any) => {
     block_parent_hash: '', 
     block_miner: '', 
     block_timestamp: '', 
+    block_timestamp_readable: '',
     block_propagation_time: '', 
     block_transactions_count: '', 
     block_size: '', 
@@ -30,6 +32,7 @@ const BlockDataCard = (props: any) => {
 
   var [cardData, setCardData] = useState(ICardData)
   var [cardState, setCardState] = useState('last')
+  var [blockDate, setBlockDate] = useState(tsReadable)
   //var [searchState, setSearchState] = useState('last')
   //const router = useRouter()
 
@@ -56,6 +59,13 @@ const BlockDataCard = (props: any) => {
     searchVal = val
   }
 
+  function dateConvert(val: any) {
+    let intVal = parseInt(val)
+    let tsDate = new Date(intVal*1000)
+    let res = tsDate.toUTCString()
+    setBlockDate(res)
+  }
+
   //const refreshData = () => {
   //  router.replace(router.asPath)
   //}
@@ -69,6 +79,8 @@ const BlockDataCard = (props: any) => {
     console.log(searchVal)
     //clearTimeout(lbTimer)
     grabBlock()
+    dateConvert(cardData.block_timestamp)
+    //console.log('date: ' + blockDate)
   })
 
   switch (cardState) {
@@ -103,19 +115,21 @@ const BlockDataCard = (props: any) => {
           <h3>Block Miner: </h3> &nbsp;
           <p>{cardData.block_miner}</p><br />
           <h3>Block Timestamp: </h3> &nbsp;
-          <p>{cardData.block_timestamp}</p><br />
+          <p>{blockDate}</p><br />
           <h3>Block Propagation Time: </h3> &nbsp;
-          <p>{cardData.block_propagation_time}</p><br />
+          <p>{cardData.block_propagation_time} second(s)</p><br />
           <h3>Block Transactions: </h3> &nbsp;
-          <p>{cardData.block_transactions_count}</p><br />
+          <p>{cardData.block_transactions_count} tx(s)</p><br />
           <h3>Block Size: </h3> &nbsp;
           <p>{cardData.block_size}</p><br />
           <h3>Block Difficulty: </h3> &nbsp;
-          <p>{cardData.block_difficulty}</p><br />
+          <p>{cardData.block_difficulty} hashes</p><br />
           <h3>Block Nonce: </h3> &nbsp;
           <p>{cardData.block_nonce}</p><br />
           <h3>Block Gas Used: </h3> &nbsp;
-          <p>{cardData.block_gas_used}</p><br />
+          <p>{cardData.block_gas_used} Wei</p><br />
+        </div>
+        <div><br />
         </div>
       </div>
     </React.Fragment>
